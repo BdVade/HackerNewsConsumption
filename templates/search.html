@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
-{% block title %} Latest Stories {% endblock %}
+{% block title %} Search Results {% endblock %}
 {% block content %}
-    <h2>Latest Stories</h2>
+    <h2>Search Results</h2>
     {% for base in bases %}
         <div class="m-5">
-
             {% if base.title %}
                 <h3>{{ base.title }}</h3>
             {% endif %}
@@ -15,7 +14,6 @@
             {% endif %}
             </p>
             <p>Hacker news id: {{ base.hacker_id }}</p>
-            <hr>
         </div>
     {% endfor %}
     {% include "pagination.html" with page=posts %}

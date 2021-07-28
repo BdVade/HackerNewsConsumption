@@ -13,7 +13,7 @@ class Base(models.Model):
     )
 
     hacker_id = models.IntegerField(unique=True, null=True)
-    time = models.TimeField(null=True)
+    time = models.DateTimeField(null=True)
     synced = models.DateTimeField(auto_now_add=True, null=True)
     type = models.CharField(choices=type_options, max_length=10)
     hn_deleted = models.BooleanField(default=False, null=True)

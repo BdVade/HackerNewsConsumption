@@ -1,9 +1,12 @@
 import requests
-from celery import task
+from QuickCheckProject.celery import app
 from .models import Base
+from datetime import datetime
+import concurrent.futures
+from .utils import create_base_object
 
 
-@task(name='sync_news')
+@app.task(name='sync_news')
 def sync_news():
     response = requests.get("https://hacker-news.firebaseio.com/v0/newstories.json")
     response = response.json()[:100]
@@ -27,13 +30,22 @@ def sync_news():
             # else:
             #     kid_objects = None
 
-            Base.objects.create(
+            base = Base.objects.create(
                 hacker_id=new_object_response.get('id'),
-                time=new_object_response.get('time'),
+                time=datetime.timestamp(new_object_response.get('time')),
                 type=new_object_response.get('type'),
                 title=new_object_response.get('title'),
                 url=new_object_response.get('url'),
                 author=new_object_response.get('by'),
                 hn_deleted=new_object_response.get('deleted'),
                 text=new_object_response.get('text'),
+
             )
+
+            if kids:
+                base_list = (base for kid in kids)
+                with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+                    executor.map(create_base_object, kids, base_list)
+
+
+
