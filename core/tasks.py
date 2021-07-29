@@ -4,6 +4,7 @@ from .models import Base
 from datetime import datetime
 import concurrent.futures
 from .utils import create_base_object
+import pytz
 
 
 @app.task(name='sync_news')
@@ -11,7 +12,7 @@ def sync_news():
     response = requests.get("https://hacker-news.firebaseio.com/v0/newstories.json")
     response = response.json()[:100]
     for hacker_news_id in response:
-        if Base.objects.get(hacker_id=hacker_news_id).exists():
+        if Base.objects.filter(hacker_id=hacker_news_id).exists():
             pass
         else:
             url = "https://hacker-news.firebaseio.com/v0/item/{}.json".format(hacker_news_id)
@@ -32,7 +33,7 @@ def sync_news():
 
             base = Base.objects.create(
                 hacker_id=new_object_response.get('id'),
-                time=datetime.timestamp(new_object_response.get('time')),
+                time=datetime.fromtimestamp(new_object_response.get('time'), pytz.utc),
                 type=new_object_response.get('type'),
                 title=new_object_response.get('title'),
                 url=new_object_response.get('url'),
@@ -41,11 +42,13 @@ def sync_news():
                 text=new_object_response.get('text'),
 
             )
+            print('baserun')
 
             if kids:
                 base_list = (base for kid in kids)
                 with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
                     executor.map(create_base_object, kids, base_list)
+                    print('kids')
 
 
 

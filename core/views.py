@@ -17,7 +17,7 @@ def latest_news(request):
         if story_type:
             bases = Base.objects.filter(type=story_type)[:100]
         else:
-            bases = Base.objects.all()[:100]
+            bases = Base.objects.filter(parent=None)[:100]
         posts = pagination(request, bases=bases)
         return render(request, template_name='latest_news.html', context={'bases': bases, 'posts': posts})
 
@@ -29,6 +29,15 @@ def search_results(request):
         posts = pagination(request, bases=bases)
         return render(request, template_name='search.html', context={'bases': bases, 'posts': posts})
     return redirect('latest_stories')
+
+
+def story_detail(request, story_id):
+    try:
+        base = Base.objects.get(id=story_id)
+    except Base.DoesNotExist:
+        return redirect('latest_stories')
+    kids = Base.objects.filter(parent=base)
+    return render(request, 'story_detail.html', {'base': base, 'kids': kids})
 
 
 @api_view(['GET', 'PUT', 'DELETE'])

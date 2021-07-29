@@ -141,9 +141,4 @@ CELERY_TASK_ALWAYS_EAGER = True
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Nairobi'
 
-CELERY_BEAT_SCHEDULE = {
-    'sync-every-five-minutes': {
-        'task': 'sync_news',
-        'schedule': 300.0,
-    },
-}
+

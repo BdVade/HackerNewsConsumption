@@ -4,13 +4,16 @@
     <h2>Search Results</h2>
     {% for base in bases %}
         <div class="m-5">
-            {% if base.title %}
-                <h3>{{ base.title }}</h3>
+           {% if base.title %}
+                <h3><a href="{% url 'story_detail'  base.id %}">{{ base.title }}</a></h3>
             {% endif %}
             <span>{{ base.type }}</span>
             <p>
             {% if base.author %}
-                {{ base.author }}
+                By: {{ base.author }}
+            {% endif %}
+            {% if base.text %}
+                {{ base.text }}
             {% endif %}
             </p>
             <p>Hacker news id: {{ base.hacker_id }}</p>

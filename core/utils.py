@@ -2,6 +2,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Base
 import requests
 from datetime import datetime
+import pytz
 
 
 def pagination(request, bases):
@@ -20,7 +21,7 @@ def pagination(request, bases):
 
 
 def create_base_object(key, parent):
-    if Base.objects.get(hacker_id=key).exists():
+    if Base.objects.filter(hacker_id=key).exists():
         pass
     else:
         url = "https://hacker-news.firebaseio.com/v0/item/{}.json".format(key)
@@ -29,7 +30,7 @@ def create_base_object(key, parent):
         Base.objects.create(
             hacker_id=new_object_response.get('id'),
             type=new_object_response.get('type'),
-            time=datetime.timestamp(new_object_response.get('time')),
+            time=datetime.fromtimestamp(new_object_response.get('time'), pytz.utc),
             title=new_object_response.get('title'),
             url=new_object_response.get('url'),
             author=new_object_response.get('by'),

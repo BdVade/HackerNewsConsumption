@@ -9,5 +9,6 @@ urlpatterns = [
 
     # pages with templates
     path('', views.latest_news, name='latest_stories'),
-    path('search/', views.search_results, name='search_results')
+    path('search/', views.search_results, name='search_results'),
+    path('story/<int:story_id>/', views.story_detail, name='story_detail')
 ]

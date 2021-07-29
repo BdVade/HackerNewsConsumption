@@ -6,14 +6,19 @@
         <div class="m-5">
 
             {% if base.title %}
-                <h3>{{ base.title }}</h3>
+                <h3><a href="{% url 'story_detail'  base.id %}">{{ base.title }}</a></h3>
             {% endif %}
             <span>{{ base.type }}</span>
             <p>
             {% if base.author %}
-                {{ base.author }}
+                <p>By:{{ base.author }}</p>
             {% endif %}
             </p>
+
+            {% if base.url %}
+                link: {{ base.url }}
+            {% endif %}
+
             <p>Hacker news id: {{ base.hacker_id }}</p>
             <hr>
         </div>

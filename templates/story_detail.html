@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}  Story Detail {% endblock %}
+{% block content %}
+
+
+    <div class="m-5">
+
+        {% if base.title %}
+            <h3>{{ base.title }}</h3>
+        {% endif %}
+
+        {% if base.text %}
+            <p>{{ base.text }}</p>
+        {% else %}
+            <p>There is no text for this story</p>
+        {% endif %}
+
+        <span>{{ base.type }}</span>
+
+        {% if base.author %}
+            <p>By:{{ base.author }}</p>
+        {% endif %}
+
+        {% if base.url %}
+            link: {{ base.url }}
+        {% endif %}
+
+        <p>Hacker news id: {{ base.hacker_id }}</p>
+        <hr>
+    </div>
+
+    <h3>Comments</h3>
+    {% if kids %}
+        <div class="m-5">
+            {% for kid in kids %}
+                 {% if kid.title %}
+                    <h3>{{ kid.title }}</h3>
+                {% endif %}
+
+                {% if kid.text %}
+                    <p>{{ kid.text }}</p>
+                {% endif %}
+
+                <span>{{ kid.type }}</span>
+                <p>
+                {% if kid.author %}
+                    by: {{ kid.author }}
+                {% endif %}
+                </p>
+                <p>Hacker news id: {{ kid.hacker_id }}</p>
+            {% endfor %}
+
+        </div>
+    {% else %}
+        <p>No comments for this piece</p>
+    {% endif %}
+{% endblock %}
